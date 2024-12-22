@@ -1,0 +1,243 @@
+import os
+
+# defining a simple tree structure class to store rhyme words
+class RhymeTree:
+    def __init__(self):
+        self.children = {}
+
+    def insert(self, word, ending):
+        if ending not in self.children:
+            self.children[ending] = []
+        self.children[ending].append(word)
+
+    def find_rhymes(self, ending):
+        if ending in self.children:
+            return self.children[ending]
+        return []
+
+def welcome_screen():
+    print("\n")
+    print("[]      []  [][][][]  []         [][][][]   [][][][]   [][]  [][]  [][][][]")
+    print("[]      []  []        []        []         []      []  [] [][] []  []")
+    print("[]  []  []  [][][]    []        []         []      []  []  []  []  [][][]")
+    print(" [][][][]   []        []        []         []      []  []      []  []")
+    print("  []  []    [][][][]  [][][][]   [][][][]   [][][][]   []      []  [][][][]")
+    print("")
+    print("                              [][][] [][][]")
+    print("                                []   []  []")
+    print("                                []   [][][]")
+    print("")
+    print("[][][][][]  []      []   [][][][]  [][]  [][]  [][][][][]  [][][][]  []    []")
+    print("    []      []      []  []         [] [][] []      []      []         []  []")
+    print("    []      []      []  []  [][]   []  []  []      []      [][][]      [][]")
+    print("    []      []      []  []     []  []      []      []      []           []")
+    print("    []       [][][][]    [][][][]  []      []  [][][][][]  []           []")
+    print("")
+    print("")
+
+def main_menu():
+    print("                                 [1] START")
+    print("                                 [2] EXIT")
+
+def thank_you():
+    clear_console()
+    print("\n")
+    print("   [][][][][]  []      []     [][]     []     []  []     []")
+    print("       []      []      []    []  []    [][]   []  []    []")
+    print("       []      [][][][][]   [][][][]   []  [] []  [][][]")
+    print("       []      []      []  []      []  []   [][]  []    []")
+    print("       []      []      []  []      []  []     []  []     []")
+    print("")
+    print("               []    []   [][][][]   []      []")
+    print("                []  []   []      []  []      []")
+    print("                 [][]    []      []  []      []")
+    print("                  []     []      []  []      []")
+    print("                  []      [][][][]    [][][][]")
+    print("")
+    print("")
+    print("")
+  
+
+def language_choice():
+    languages = ["ENGLISH", "TAGALOG"]
+    while True:
+        clear_console()
+        welcome_screen()
+        print("\t\t\t    LANGUAGES AVAILABLE\n")
+        for index, language in enumerate(languages, start=1):
+            print(f"\t\t\t        {index}. {language}")
+        
+        choice = input(f"\n\t\t    PLEASE CHOOSE A LANGUAGE (1 to {len(languages)}): ").strip()
+        
+        if choice.isdigit() and 1 <= int(choice) <= len(languages):
+            selected_language = languages[int(choice) - 1]
+            print(f"you selected {selected_language}.")
+            get_word_input(selected_language)
+            break
+        else:
+            print("\n\t        INVALID CHOICE. PLEASE SELECT A VALID OPTION.")
+            input("\t\t        press ENTER to try again...")
+
+def get_word_input(language):
+    while True:
+        clear_console()
+        welcome_screen()
+        
+        if language == "ENGLISH":
+            word = input("\n\t   PLEASE ENTER A WORD IN ENGLISH (OR TYPE '3' TO GO BACK)\n\t\t\t    HERE: ").strip()
+        elif language == "TAGALOG":
+            word = input("MANGYARING MAGLAGAY NG ISANG SALITA SA TAGALOG (O ILAGAY ANG '3' PARA BUMALIK)\n\t\t\t  DITO: ").strip()
+
+        if word == '3':
+            return
+        
+        if not word.isalpha():
+            print("\n\t  ERROR: PLEASE ENTER A VALID WORD CONTAINING ONLY LETTERS.")
+            input("\t\t      press ENTER to try again...")
+            continue
+        
+        word = word.lower()
+        print(f"YOU ENTERED THE WORD: {word}")
+        find_rhymes(word, language)
+
+        continue_choice = input("\n\t      DO YOU WANT TO SEARCH FOR ANOTHER WORD? (y/n): ").strip().lower()
+        
+        while continue_choice not in ['y', 'n']:
+            print("\t    INVALID INPUT. PLEASE ENTER 'y' for YES or 'n' for NO.")
+            continue_choice = input("\n\t      DO YOU WANT TO SEARCH FOR ANOTHER WORD? (y/n): ").strip().lower()
+        
+        if continue_choice != 'y':
+            thank_you()
+            return
+
+def find_rhymes(input_word, language):
+    english_words = {
+    "cat": "at", "bat": "at", "hat": "at", "rat": "at", "mat": "at", "flat": "at", "chat": "at", 
+    "stat": "at", "combat": "at", "format": "at", "pat": "at", "scat": "at", "acrobat": "at",
+    "king": "ing", "sing": "ing", "ring": "ing", "thing": "ing", "bring": "ing", "cling": "ing", 
+    "sting": "ing", "ping": "ing", "wing": "ing", "fling": "ing", "bling": "ing", "zing": "ing", 
+    "string": "ing", "sting": "ing", "spring": "ing", "kingdom": "dom", "freedom": "dom",
+    "baked": "ed", "raked": "ed", "flaked": "ed", "faked": "ed", "walked": "ed", "talked": "ed", 
+    "joked": "ed", "smoked": "ed", "liked": "ed", "hiked": "ed", "barked": "ed", "worked": "ed",
+    "low": "ow", "grow": "ow", "show": "ow", "blow": "ow", "snow": "ow", "flow": "ow", "throw": "ow", 
+    "know": "ow", "glow": "ow", "slow": "ow", "bestow": "ow", "bow": "ow", "cow": "ow", "how": "ow",
+    "quickly": "ly", "suddenly": "ly", "happily": "ly", "gracefully": "ly", "easily": "ly", "rarely": "ly", 
+    "duly": "ly", "truly": "ly", "bravely": "ly", "gently": "ly", "freely": "ly", "calmly": "ly", 
+    "tree": "ee", "bee": "ee", "free": "ee", "see": "ee", "three": "ee", "me": "ee", "key": "ee", 
+    "knee": "ee", "flee": "ee", "agree": "ee", "coffee": "ee", "spree": "ee", "company": "ny",
+    "moon": "oo", "soon": "oo", "spoon": "oo", "balloon": "oo", "croon": "oo", "goon": "oo", 
+    "room": "oo", "doom": "oo", "zoom": "oo", "broom": "oo", "gloom": "oo", "vroom": "oo", "boom": "oo",
+    "star": "ar", "car": "ar", "bar": "ar", "jar": "ar", "guitar": "ar", "spar": "ar", "far": "ar",
+    "tar": "ar", "war": "ar", "radar": "ar", "avatar": "ar", "polar": "ar", "tzar": "ar", "solar": "ar",
+    "bus": "us", "plus": "us", "thus": "us", "fuss": "us", "cuss": "us", "buss": "us", "trust": "us",
+    "dust": "us", "rust": "us", "gust": "us", "thrust": "us", "muss": "us", "bus": "us",
+    "light": "ight", "night": "ight", "fight": "ight", "bright": "ight", "sight": "ight", "right": "ight",
+    "flight": "ight", "might": "ight", "tight": "ight", "knight": "ight", "height": "ight", "bite": "ite",
+    "stone": "one", "alone": "one", "cone": "one", "phone": "one", "zone": "one", "clone": "one", 
+    "bone": "one", "loan": "one", "groan": "one", "throne": "one", "known": "one", "shown": "one",
+    "happy": "y", "funny": "y", "sunny": "y", "money": "y", "bunny": "y", "honey": "y", "dry": "y", 
+    "cry": "y", "sky": "y", "fly": "y", "shy": "y", "guy": "y", "my": "y", "buy": "y",
+    "go": "o", "so": "o", "do": "o", "no": "o", "fo": "o", "low": "o", "flow": "o", "snow": "o",
+    "grow": "o", "show": "o", "blow": "o", "glow": "o", "joke": "e", "poke": "e", "broke": "e", "smoke": "e",
+    "fire": "ire", "desire": "ire", "tire": "ire", "inspire": "ire", "hire": "ire", "choire": "ire", 
+    "power": "wer", "flower": "wer", "tower": "wer", "shower": "wer", "sour": "our", "hour": "our",
+    "anger": "ger", "danger": "ger", "stranger": "ger", "ranger": "ger", "hanger": "ger", "manager": "ger",
+    "dangerous": "ous", "curious": "ous", "famous": "ous", "serious": "ous", "courageous": "ous", 
+    "spacious": "ous", "nervous": "ous", "anxious": "ous", "dangerously": "ly", "seriously": "ly",
+    "generously": "ly", "mysteriously": "ly", "notoriously": "ly", "powerfully": "ly", "suspiciously": "ly",
+    "carefully": "ly", "dangerously": "ly", "beautifully": "ly",
+}
+
+    tagalog_words = {
+    "bahay": "hay", "sama": "ama", "bata": "ata", "mata": "ata", "sama": "ama", "kama": "ama", 
+    "saka": "ka", "hataw": "aw", "dama": "ama", "kada": "da", "taga": "ga", "baga": "ga", 
+    "mangga": "ga", "lupa": "upa", "gala": "la", "puso": "so", "gabi": "bi", "sabi": "bi", 
+    "salita": "ta", "mata": "ata", "bato": "ato", "kalbo": "bo", "baba": "ba", "pita": "ta", 
+    "tagumpay": "ay", "kasama": "ma", "pakpak": "pak", "tulungan": "an", "sabi": "bi", "taho": "ho", 
+    "bato": "ato", "pato": "ato", "halo": "lo", "gato": "ato", "kahel": "hel", "bilo": "lo", 
+    "malasakit": "kit", "sigaw": "aw", "pagkain": "in", "kanin": "in", "pilak": "lak", "dahil": "hil", 
+    "sakit": "kit", "talon": "lon", "bikin": "in", "dimin": "in", "pintuan": "an", "kukunin": "in", "hinog": "og",
+    "kendi": "di", "sisi": "si", "bala": "la", "tawa": "wa", "kilos": "os", "suweldo": "do", 
+    "puno": "no", "patay": "tay", "sabi": "bi", "takaw": "aw", "suklay": "lay", "makina": "na", 
+    "halina": "na", "sampung": "ng", "mangyari": "ri", "giliw": "iw", "kaibigan": "gan", 
+    "buwan": "an", "bata": "ata", "tatay": "ay", "lupa": "pa", "manok": "ok", "sama": "ma", "tahanan": "nan",
+    "taglay": "lay", "kamay": "ay", "tanglaw": "aw", "taga": "ga", "babae": "bae", "gabi": "bi", 
+    "hilo": "lo", "puno": "no", "dala": "la", "sama": "ma", "batya": "ya", "puti": "ti", 
+    "suntok": "tok", "takaw": "aw", "bahay": "hay", "daliri": "ri", "kasama": "ma", "wika": "ka",
+    "kasaysayan": "yan", "bagyo": "yo", "tulungan": "an", "kapayapaan": "aan", "pag-ibig": "ibig", 
+    "pagkakaisa": "sa", "katapatan": "tan", "kalikasan": "san", "pagtulong": "ong", "laban": "ban", 
+    "tulad": "ad", "magkaibigan": "gan", "lahat": "hat", "pagkakataon": "on", "bikini": "ni", "sikat": "kat",
+    "dahil": "hil", "labanan": "an", "puno": "no", "mabilis": "is", "huwag": "wag", "bagay": "ay", 
+    "lahat": "hat", "madali": "li", "puso": "so", "isang": "ng", "saksi": "si", "puno": "no", 
+    "bintang": "ang", "lihim": "him", "halaga": "ga", "sikreto": "to", "lunas": "as", "tulong": "long",
+    "tiwala": "la", "sugatang": "ang", "sipon": "on", "yakap": "ap", "huwi": "wi", "huwag": "wag", 
+    "basura": "ra", "payo": "yo", "sipres": "res", "katapangan": "gan", "pulso": "so", "kalbo": "bo", 
+    "kubo": "bo", "katulad": "ad", "kaibigan": "gan", "dangal": "al", "mga": "ga", "maganda": "da",
+    "pakpak": "pak", "tulungan": "an", "bibilin": "in", "kapwa": "wa", "bantay": "tay", "tulungan": "an",
+    "magmahal": "hal", "maharlika": "ka", "kaalaman": "man", "kalikasan": "san", "sulong": "long", 
+    "magkaibigan": "gan", "isda": "da", "sarap": "ap", "hala": "la", "sakit": "kit", "hilaw": "aw", 
+    "kutitap": "ap", "kababaihan": "han", "kaligayahan": "han", "pag-asa": "sa", "haway": "way", 
+    "kalusugan": "gan", "panganib": "ib", "kapayapaan": "aan", "pakpak": "pak", "sipilyo": "yo",
+    "bukas": "kas", "tulad": "ad", "babala": "la", "puno": "no", "tahanan": "nan", "masaya": "ya",
+    "basura": "ra", "pagkain": "in", "tulad": "ad", "sama": "ma", "tagalog": "og", "patuloy": "oy",
+    "tulungan": "an", "kasama": "ma", "bato": "ato", "bayani": "ni", "kaisipan": "an", "mahal": "hal",
+    "tama": "ma", "baso": "so", "aksyon": "on", "kita": "ta", "sama": "ma", "babae": "bae", 
+    "mga": "ga", "ikaw": "aw", "buhay": "hay", "mali": "li", "sinturon": "on", "diwa": "wa", 
+    "hatinggabi": "bi", "mabuti": "ti", "gabi": "bi", "dahil": "hil", "pupunta": "ta", "sakit": "kit",
+    "tulungan": "an", "kanan": "an", "kaliwa": "wa", "daliri": "ri", "patagilid": "id", "buwan": "an",
+    "mapagmahal": "hal", "pagdapo": "po", "takaw": "aw", "pakpak": "pak", "matamis": "is", 
+}
+
+
+
+    english_rhyme_tree = RhymeTree()
+    tagalog_rhyme_tree = RhymeTree()
+
+    if language == "ENGLISH":
+        for word, ending in english_words.items():
+            english_rhyme_tree.insert(word, ending)
+        find_and_display_rhymes(input_word, english_rhyme_tree, english_words)
+    elif language == "TAGALOG":
+        for word, ending in tagalog_words.items():
+            tagalog_rhyme_tree.insert(word, ending)
+        find_and_display_rhymes(input_word, tagalog_rhyme_tree, tagalog_words)
+
+def find_and_display_rhymes(input_word, rhyme_tree, word_map):
+    ending = word_map.get(input_word)
+    
+    if ending is None:
+        print(f"COULD NOT FIND RHYME-ENDING FOR '{input_word}' IN THE WORD MAP. USING FALLBACK: {input_word[-3:]}")
+        ending = input_word[-3:]
+    
+    print(f"RHYME ENDING EXTRACTED FOR '{input_word}': {ending}")
+    
+    rhyming_words = rhyme_tree.find_rhymes(ending)
+    
+    if rhyming_words:
+        print(f"\nWORDS THAT RHYME WITH '{input_word}':")
+        for word in rhyming_words:
+            print(f"- {word}")
+    else:
+        print(f"SORRY, NO RHYMING WORDS FOUND FOR '{input_word}'.")
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+while True:
+    clear_console()
+    welcome_screen()
+    main_menu()
+    
+    main_choice = input("\n\t\t\t PLEASE CHOOSE AN OPTION: ").strip()
+    
+    while main_choice not in ['1', '2']:
+        clear_console()
+        welcome_screen()
+        print("\t\t\t      INVALID CHOICE")
+        main_choice = input("\n\t   PLEASE CHOOSE AN OPTION (1 to START, 2 to EXIT): ").strip()
+    
+    if main_choice == "1":
+        language_choice()
+    elif main_choice == "2":
+        thank_you()
+        break
